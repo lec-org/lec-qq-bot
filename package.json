@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/takayama-lily/onebot#readme",
   "dependencies": {
+    "axios": "^0.27.2",
+    "nodemon": "^2.0.16",
     "oicq": "^1.18.1",
     "ws": "^7.5.3"
   }

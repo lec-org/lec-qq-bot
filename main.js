@@ -11,18 +11,16 @@ try {
     require("./config.js");
 } catch (e) {
     console.log(e);
-    console.log(`
-未找到config.js文件或配置有语法错误
-`);
+    console.log(`未找到config.js文件或配置有语法错误`);
     process.exit(0);
 }
 
-try {
-    console.log(`正在检查&更新内核版本..`);
-    require("child_process").execSync("npm up --no-save", {stdio: "ignore"});
-} catch (e) {
-    console.log(`"npm up --no-save"执行失败，你可能需要手动执行。`);
-}
+// try {
+//     console.log(`正在检查&更新内核版本..`);
+//     require("child_process").execSync("npm up --no-save", {stdio: "ignore"});
+// } catch (e) {
+//     console.log(`"npm up --no-save"执行失败，你可能需要手动执行。`);
+// }
 
 // 引入核心依赖
 require("oicq");

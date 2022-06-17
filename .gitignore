@@ -1,4 +1,7 @@
 node_modules
 .vscode
 data
-config.js
+.idea
+package-lock.json
+Dockerfile
+docker-compose.yaml
