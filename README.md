@@ -1,13 +1,15 @@
 ## 乐程QQ机器人
 
 ### 项目依赖
-本项目基于node
-原项目为node-onebot:<br>
+
+原项目为node-onebot:
 >[https://github.com/takayama-lily/node-onebot](https://github.com/takayama-lily/node-onebot)
-而node-onebot又基于oicq:<br>
-> [https://github.com/takayama-lily/oicq](https://github.com/takayama-lily/oicq)
-二次扩展请结合oicq接口文档:<br>
-> [https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts](https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts)
+
+而node-onebot又基于oicq:
+>https://github.com/takayama-lily/oicq](https://github.com/takayama-lily/oicq)
+
+二次扩展请结合oicq文档:
+>[https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts](https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts)
 
 ### 使用说明
 确保已经安装了NodeJS以及其包管理工具（npm）
