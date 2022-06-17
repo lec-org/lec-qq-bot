@@ -37,6 +37,6 @@ node main.js 1770874035
 npm i nodemon -g
 # 全局安装nodemon；如果已经安装过了，就不用执行上述语句
 nodemon main 1770874035
-# 热更新 地启动机器人
+# 热更新地启动机器人
 ```
 
