@@ -21,5 +21,8 @@
     "nodemon": "^2.0.16",
     "oicq": "^1.18.1",
     "ws": "^7.5.3"
+  },
+  "devDependencies": {
+    "request": "^2.88.2"
   }
 }
