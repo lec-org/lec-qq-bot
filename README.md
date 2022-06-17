@@ -6,7 +6,7 @@
 >[https://github.com/takayama-lily/node-onebot](https://github.com/takayama-lily/node-onebot)
 
 而node-onebot又基于oicq:
->https://github.com/takayama-lily/oicq](https://github.com/takayama-lily/oicq)
+>[https://github.com/takayama-lily/oicq](https://github.com/takayama-lily/oicq)
 
 二次扩展请结合oicq文档:
 >[https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts](https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts)
