@@ -2,11 +2,11 @@
 
 ### 项目依赖
 本项目基于node
-原项目为node-onebot:
+原项目为node-onebot:<br>
 >[https://github.com/takayama-lily/node-onebot](https://github.com/takayama-lily/node-onebot)
-而node-onebot又基于oicq:
+而node-onebot又基于oicq:<br>
 > [https://github.com/takayama-lily/oicq](https://github.com/takayama-lily/oicq)
-二次扩展请结合oicq接口文档:
+二次扩展请结合oicq接口文档:<br>
 > [https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts](https://github.com/takayama-lily/oicq/blob/372d1db11cbb64d856f7cf1bce373be2d3a70053/index.d.ts)
 
 ### 使用说明
