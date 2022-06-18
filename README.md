@@ -24,8 +24,7 @@
 如果你已经清楚了相关配置，那么启动机器人只需要以下语句：
 
 ```shell
-node main.js 1770874035
-# 使用node main可能导致无限重启 
+node main 1770874035
 # 后面是机器人的账号，当然你可以结合原项目文档自行配置
 ```
 
@@ -36,7 +35,8 @@ node main.js 1770874035
 ```shell
 npm i nodemon -g
 # 全局安装nodemon；如果已经安装过了，就不用执行上述语句
-nodemon main 1770874035
+nodemon main.js 1770874035
+# 使用nodemon main 命令可能会导致无限重启
 # 热更新地启动机器人
 ```
 
