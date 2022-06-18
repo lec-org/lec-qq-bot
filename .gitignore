@@ -5,3 +5,4 @@ data
 package-lock.json
 Dockerfile
 docker-compose.yaml
+img/
