@@ -20,6 +20,7 @@
     "axios": "^0.27.2",
     "nodemon": "^2.0.16",
     "oicq": "^1.18.1",
+    "sprintf-js": "^1.1.2",
     "ws": "^7.5.3"
   },
   "devDependencies": {

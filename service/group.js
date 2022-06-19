@@ -2,6 +2,7 @@
 const axios = require("axios");
 const request = require("request");
 const fs = require("fs");
+const String = require('sprintf-js')
 const messageGroupConfig = [
     {
         keywords: '乐程是什么',
@@ -77,8 +78,9 @@ const messageGroupConfig = [
                         '7. 每日一题\n' +
                         '8. 舔狗日记\n' +
                         '9. 二次元\n' +
-                        '10. 力扣随机一题\n'+
-                        '11. 听首歌'
+                        '10. 力扣随机一题\n' +
+                        '11. 听首歌\n'+
+                        '12. 网易云热评'
                 },
             },
         ],
@@ -333,6 +335,29 @@ const messageGroupConfig = [
                     }
                 ).catch(e => {
                     console.log('网易云接口调用出错了')
+                    console.error(e)
+                    resolve('休息一下吧')
+                })
+            })
+        }
+    },
+    {
+        keywords: '网易云热评',
+        reply: [],
+        callback: (data, bot) => {
+            return new Promise((resolve, reject) => {
+                axios.get('https://v2.alapi.cn/api/comment?token=aCPgupefjrIOitsa').then(res => {
+                        if (res.data.code !== 200) {
+                            console.warn('网易云热评接口调用出错')
+                            console.log(res.data)
+                            resolve("休息一下吧")
+                            return
+                        }
+                        let msg = String.sprintf("%s\n——网易云音乐热评《%s》", res.data.data.comment_content, res.data.data.title)
+                        resolve(msg)
+                    }
+                ).catch(e => {
+                    console.log('网易云热评接口调用出错了')
                     console.error(e)
                     resolve('休息一下吧')
                 })
