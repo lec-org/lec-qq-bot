@@ -353,7 +353,7 @@ const messageGroupConfig = [
                             resolve("休息一下吧")
                             return
                         }
-                        let msg = String.sprintf("%s\n——网易云音乐热评《%s》", res.data.data.comment_content, res.data.data.title)
+                        let msg = String.sprintf("%s\n\n——网易云音乐热评《%s》", res.data.data.comment_content, res.data.data.title)
                         resolve(msg)
                     }
                 ).catch(e => {
