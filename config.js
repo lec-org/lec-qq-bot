@@ -9,7 +9,7 @@ module.exports = {
         debug:              false,  //开启debug
         use_cqhttp_notice:  true,   //是否使用cqhttp标准的notice事件格式
 
-        host:               "0.0.0.0",  //监听主机名
+        host:               "127.0.0.1",  //监听主机名
         port:               5700,       //端口
         use_http:           false,      //启用http
         use_ws:             false,      //启用正向ws，和http使用相同地址和端口
