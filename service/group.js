@@ -16,7 +16,10 @@ const messageGroupConfig = [
             {
                 type: 'text',
                 data: {
-                    text: '欢迎加入乐程软件工作室!'
+                    text: 
+                    '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
+                    '自2010年成立至今,团队有众多成员进入百度阿里腾讯等一线互联网公司就业，以及川大、电子科大等学校进一步深造!\n' + 
+                    '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
                 }
             }
         ]
@@ -103,7 +106,9 @@ const messageGroupConfig = [
             {
                 type: "text",
                 data: {
-                    text: `我是乐程机器人二号LEC v2.0`
+                    text: 
+                    '我是乐程机器人二号LEC v2.0 \n' +
+                    '由乐程软件工作室20级成员开发~'
                 }
             }
         ]
@@ -112,9 +117,7 @@ const messageGroupConfig = [
         keywords: '天气',
         reply: [],
         callback: (data, bot) => {
-
             return new Promise((resolve, reject) => {
-
                 axios.get("http://aider.meizu.com/app/weather/listWeather?cityIds=101270101").then(res => {
                     let s = []
                     if (res.data.code !== '200') {
@@ -257,9 +260,10 @@ const messageGroupConfig = [
                     url: 'https://api.oick.cn/random/api.php?type=pe',
                     responseType: 'stream'
                 }).then((response) => {
+                    // 这里就先别保存了，节约空间
                     // 不浪费, 将图片保存到本地./img中
-                    let stream = fs.createWriteStream(path)
-                    response.data.pipe(stream)
+                    // let stream = fs.createWriteStream(path)
+                    // response.data.pipe(stream)
 
                     // pipe是异步的, 需要用回调函数确认是否完成
                     stream.on('close', () => {
@@ -312,7 +316,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '听首歌',
+        keywords: '歌',
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -367,11 +371,13 @@ const messageGroupConfig = [
     { // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
         keywords: '',
         reply: [],
-        callback: function () {
+        callback: function (data, bot) {
             return new Promise((resolve, reject) => {
                 let replyMsg = ['(oωo)喵?', '干嘛?', '怎么了?', '在的', '嗯哼?', '@我干嘛?', '[CQ:face,id=307,text=/喵喵]', '2333~', '咕-咕-咕-',
                     '[CQ:image,file=812dea6ecfaa3b293ee1a3028209354741519-417-114.gif,url=https://c2cpicdw.qpic.cn/offpic_new/2779066456//2779066456-1883383011-812DEA6ECFAA3B293EE1A30282093547/0?term=2]',
-                    '[CQ:image,file=53f96a7a6539652caf0486c065b5069c280114-240-240.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2353126009-53F96A7A6539652CAF0486C065B5069C/0?term=2]'
+                    '[CQ:image,file=53f96a7a6539652caf0486c065b5069c280114-240-240.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2353126009-53F96A7A6539652CAF0486C065B5069C/0?term=2]',
+                    '有时候和我聊天的人太多了,我只能选择回复一部分', '虽然还不知道你想要说什么,但我还是得提醒一下有个东西叫百度', '嗨嗨害', '哪里又需要我了？', '怎么,是打算V我50了吗？',
+                    '有时候,有的话题我建议找我私聊比较好', '(。w。)', '如果有什么建议，可以反馈给乐程的开发者们'
                 ].randomOne()
                 resolve(replyMsg)
             })
@@ -380,6 +386,5 @@ const messageGroupConfig = [
 
 ]
 
-module.exports = {
-    messageGroupConfig
-}
+module.exports = messageGroupConfig
+
