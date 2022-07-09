@@ -16,9 +16,9 @@ const messageGroupConfig = [
             {
                 type: 'text',
                 data: {
-                    text: 
+                    text:
                     '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
-                    '自2010年成立至今,团队有众多成员进入百度阿里腾讯等一线互联网公司就业，以及川大、电子科大等学校进一步深造!\n' + 
+                    '自2010年成立至今,团队有众多成员进入百度阿里腾讯等一线互联网公司就业，以及川大、电子科大等学校进一步深造!\n' +
                     '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
                 }
             }
@@ -106,7 +106,7 @@ const messageGroupConfig = [
             {
                 type: "text",
                 data: {
-                    text: 
+                    text:
                     '我是乐程机器人二号LEC v2.0 \n' +
                     '由乐程软件工作室20级成员开发~'
                 }
@@ -262,8 +262,8 @@ const messageGroupConfig = [
                 }).then((response) => {
                     // 这里就先别保存了，节约空间
                     // 不浪费, 将图片保存到本地./img中
-                    // let stream = fs.createWriteStream(path)
-                    // response.data.pipe(stream)
+                    let stream = fs.createWriteStream(path)
+                    response.data.pipe(stream)
 
                     // pipe是异步的, 需要用回调函数确认是否完成
                     stream.on('close', () => {
