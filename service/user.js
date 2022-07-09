@@ -1,6 +1,6 @@
-const messagePrivateConfig = [ 
+const messagePrivateConfig = [
     {
-        keywords: '秘密',
+        keywords: ['秘密'],
         reply: [],
         callback: function (data, bot) {
             return new Promise((resolve, reject) => {
@@ -36,21 +36,21 @@ const messagePrivateConfig = [
                     '乐程其实并不只是做软件啦~~',
                     '需要做外包项目可以私聊QQ2779066456, 新生认证价格优惠呢'
                 ].randomOne()
-                resolve(replyMsg) 
+                resolve(replyMsg)
             })
         }
     },
     { // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
-        keywords: '',
+        keywords: [],
         reply: [],
         callback: function (data, bot) {
             return new Promise((resolve, reject) => {
                 let replyMsg = [
-                    '嗯？', '?', '为什么不在群里面说呢？', '是有什么只能私聊的事情吗？', '你该不会想加我微信吧？我还是未成年呢!', 
+                    '嗯？', '?', '为什么不在群里面说呢？', '是有什么只能私聊的事情吗？', '你该不会想加我微信吧？我还是未成年呢!',
                     '是我出Bug了吗？可以联系乐程的软件工程师们修复哦~', '嗯，说的好!(完全没在听)', '嗯嗯(敷衍)', '悄悄告诉我,你是不是其他团队的卧底？',
-                    '每个人都会有秘密对吧——虽然我是机器人,但是我也有秘密的~', `日志记录:\n${new Date()}\n有个奇怪的家伙私聊我:\n${data.raw_message}`, '嗨嗨害',
+                    '每个人都会有秘密对吧——虽然我是机器人,但是我也有秘密的~', `日志记录:\n${new Date()}\n有个奇怪的家伙私聊我:\nmsg: ${data.raw_message}`, '嗨嗨害',
                     '你再这样说我可是要告诉管理员的!', '先不说这个，我们说说别的——乐程的考试可是很难的!用心准备嗷!', '哎，你要和我聊天咩(owo)?',
-                    '说起秘密，我可以给你讲很多秘密', '出错了, MODULE "LEC_QQ_ROBOT" IS NOT FOUND!!!\n(诶,我装的)', 
+                    '说起秘密，我可以给你讲很多秘密', '出错了, MODULE "LEC_QQ_ROBOT" IS NOT FOUND!!!\n(诶,我装的)',
                     '你知道这段代码中的res值是什么吗\nint i = 1;\nintres = (i++)+(i++);', 'BUG？哪里有BUG？哦,你是说寝室有蟑螂啊...', '话说起来你是多无聊才会找我聊天啊..',
                     '有时间多去学习学习,计算机要卷起来才是!', '某小学生十二岁有六年编程经验了!这意味着你要到40岁才能有他的水平呢!!'
                 ].randomOne()

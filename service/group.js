@@ -5,7 +5,7 @@ const fs = require("fs");
 const String = require('sprintf-js')
 const messageGroupConfig = [
     {
-        keywords: '乐程是什么',
+        keywords: ['乐程是什么', '乐程'],
         reply: [
             {
                 type: 'image',
@@ -25,7 +25,7 @@ const messageGroupConfig = [
         ]
     },
     {
-        keywords: '在哪里',
+        keywords: ['在哪里', '位置', '地方', '哪里'],
         reply: [{
             type: 'location',
             data: {
@@ -37,7 +37,7 @@ const messageGroupConfig = [
         ]
     },
     {
-        keywords: '丢骰子',
+        keywords: ['丢骰子', '骰子'],
         reply: [
             {
                 type: "dice",
@@ -48,7 +48,7 @@ const messageGroupConfig = [
         ]
     },
     {
-        keywords: '签到',
+        keywords: ['签到'],
         reply: [
             {
                 type: 'text',
@@ -65,7 +65,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '列表',
+        keywords: ['列表', '菜单', '功能', '你能干啥'],
         reply: [
             {
                 type: "text",
@@ -90,7 +90,7 @@ const messageGroupConfig = [
 
     },
     {
-        keywords: '转发',
+        keywords: ['转发'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -101,7 +101,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '你是谁',
+        keywords: ['你是谁', 'who are you', 'who'],
         reply: [
             {
                 type: "text",
@@ -114,7 +114,7 @@ const messageGroupConfig = [
         ]
     },
     {
-        keywords: '天气',
+        keywords: ['天气', '气温'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -145,7 +145,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '微博热搜',
+        keywords: ['微博热搜', '热搜', '微博'],
         reply: [],
         callback: (data, bot) => {
 
@@ -173,7 +173,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '每日一题',
+        keywords: ['每日一题'],
         reply: [],
         callback: function (data, bot) {
             return new Promise((resolve, reject) => {
@@ -210,7 +210,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '舔狗日记',
+        keywords: ['舔狗日记'],
         reply: [],
         callback: (data, bot) => {
 
@@ -236,7 +236,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '二次元',
+        keywords: ['二次元'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -280,7 +280,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '随机一题',
+        keywords: ['随机一题'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -316,7 +316,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '歌',
+        keywords: ['歌', '网易云', '网抑云'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -346,7 +346,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: '网易云热评',
+        keywords: ['网易云热评', '热评'],
         reply: [],
         callback: (data, bot) => {
             return new Promise((resolve, reject) => {
@@ -369,7 +369,7 @@ const messageGroupConfig = [
         }
     },
     { // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
-        keywords: '',
+        keywords: [],
         reply: [],
         callback: function (data, bot) {
             return new Promise((resolve, reject) => {
