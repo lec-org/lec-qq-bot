@@ -9,25 +9,26 @@ const map = new Map()
 const messageGroupConfig = [
     {
         keywords: ['乐程是什么', '乐程'],
-        reply: [{
-            type: 'image',
-            data: {
-                file: 'f4638e4a79c46498abf55d5598d9ab96142524-889-500.jpg'
-            }
-        },
+        reply: [
+            {
+                type: 'image',
+                data: {
+                    file: 'c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg'
+                }
+            },
             {
                 type: 'text',
                 data: {
                     text:
                         '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
                         '自2010年成立至今,团队有众多成员进入百度阿里腾讯等一线互联网公司就业，以及川大、电子科大等学校进一步深造!\n' +
-                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
+                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!' 
                 }
             }
         ]
     },
     {
-        keywords: ['在哪里', '位置', '地方', '哪里'],
+        keywords: ['在哪里', '位置', '地方', '哪里', '在哪', '位置', '地点'],
         reply: [{
             type: 'location',
             data: {
@@ -39,7 +40,7 @@ const messageGroupConfig = [
         ]
     },
     {
-        keywords: ['丢骰子', '骰子'],
+        keywords: ['丢骰子', '骰子', '色子'],
         reply: [{
             type: "dice",
             data: {
@@ -87,7 +88,7 @@ const messageGroupConfig = [
                         '10. 力扣随机一题\n' +
                         '11. 听首歌\n' +
                         '12. 网易云热评\n' +
-                        '13. 聊天机器人模式: 开启后有更多功能. 发送 "开启聊天" 开启, 发送 "关闭聊天" 关闭\n\n' +
+                        '13. 高情商聊天: 开启后有更多功能. 发送 "开启聊天" 开始, 发送 "关闭聊天" 结束\n\n' +
                         '即将支持更多功能'
                 },
             },
@@ -272,7 +273,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['随机一题'],
+        keywords: ['随机一题', '来道题'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let para = {
@@ -358,7 +359,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['开启聊天'],
+        keywords: ['开启聊天', '聊天'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
@@ -372,7 +373,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['关闭聊天'],
+        keywords: ['关闭聊天', '关闭'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
@@ -397,7 +398,12 @@ const messageGroupConfig = [
                         '[CQ:image,file=812dea6ecfaa3b293ee1a3028209354741519-417-114.gif,url=https://c2cpicdw.qpic.cn/offpic_new/2779066456//2779066456-1883383011-812DEA6ECFAA3B293EE1A30282093547/0?term=2]',
                         '[CQ:image,file=53f96a7a6539652caf0486c065b5069c280114-240-240.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2353126009-53F96A7A6539652CAF0486C065B5069C/0?term=2]',
                         '有时候和我聊天的人太多了,我只能选择回复一部分', '虽然还不知道你想要说什么,但我还是得提醒一下有个东西叫百度', '嗨嗨害', '哪里又需要我了？', '怎么,是打算V我50了吗？',
-                        '有时候,有的话题我建议找我私聊比较好', '(。w。)', '如果有什么建议，可以反馈给乐程的开发者们'
+                        '有时候,有的话题我建议找我私聊比较好', '(。w。)', '如果有什么建议，可以反馈给乐程的开发者们', '[CQ:image,file=bf6d885be9997e67e783c71e9af9c9e99796-240-240.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2355345593-BF6D885BE9997E67E783C71E9AF9C9E9/0?term=2]',
+                        '[CQ:image,file=67ad61b9c39ee80d2ce868144ddad15f86909-1080-1080.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2401112147-67AD61B9C39EE80D2CE868144DDAD15F/0?term=2]',
+                        '[CQ:image,file=c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2607997725-C78D9D5C7582D8784D0EEF74AE1C8B96/0?term=2]',
+                        '[CQ:image,file=4963658e6bad33e4feee8c2bd7296fa2499244-240-148.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-3029959254-4963658E6BAD33E4FEEE8C2BD7296FA2/0?term=2]',
+                        '[CQ:image,file=a51555ea7b750eb4d8064ffebbe17e1d82099-1080-1128.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2519447466-A51555EA7B750EB4D8064FFEBBE17E1D/0?term=2]',
+                        '不懂，我是人工智障'
                     ].randomOne()
                     resolve(replyMsg)
                 })
