@@ -7,7 +7,7 @@ const autoGroups = [
 
 const autoConfig = {
     data: {
-        intervalTime: 60 * 1000, // 轮询间隔时间
+        intervalTime: 30 * 60 * 1000, // 轮询间隔时间
     },
     // time目前是取[0, 23]的整数, 表示每天触发的时间
     // 注意让events的时间升序排列
