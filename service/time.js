@@ -19,7 +19,7 @@ const autoConfig = {
                     {
                         type: 'image',
                         data: {
-                            file: 'c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg'
+                            file: '9a26a0679cb7f2488919c300b3605d9069800-750-1344.jpg'
                         }
                     },
                     {
