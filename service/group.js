@@ -22,13 +22,13 @@ const messageGroupConfig = [
                     text:
                         '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
                         '自2010年成立至今,团队有众多成员进入百度阿里腾讯等一线互联网公司就业，以及川大、电子科大等学校进一步深造!\n' +
-                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!' 
+                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
                 }
             }
         ]
     },
     {
-        keywords: ['在哪里', '位置', '地方', '哪里', '在哪', '位置', '地点'],
+        keywords: ['在哪里', '位置', '地方', '哪里', '在哪', '地点'],
         reply: [{
             type: 'location',
             data: {
@@ -59,7 +59,10 @@ const messageGroupConfig = [
                     "content": "签到",
                     "type": 2,
                     "from": data.sender.user_id,
-                    "fromName": data.sender.nickname,
+                    "fromName": data.sender.card,
+                    // 没有to, 好友和群会混淆
+                    "to": data.group_id,
+                    "toName": data.group_name,
                 }
                 // console.log(playLoad)
                 mlyai.chat(playLoad).then(reply => {
@@ -364,7 +367,7 @@ const messageGroupConfig = [
             return new Promise(resolve => {
                 let userId = data.sender.user_id
                 if (map.get(userId) === 1) {
-                    resolve("已经在聊天模式中了哦, \n支持:\n1. 签到\n2. 猜拳xx(例如石头)\n3. 个人中心\n4. 一言\n5. 智能回复")
+                    resolve("已经在聊天模式中了哦, \n支持:\n1. 签到 | 签到榜\n2. 猜拳xx(例如石头)\n3. 个人中心\n4. 一言\n5. 智能回复")
                 } else {
                     map.set(userId, 1)
                     resolve("开启聊天模式成功~, \n支持:\n1. 签到\n2. 猜拳xx(例如石头)\n3. 个人中心\n4. 一言\n5. 智能回复")
@@ -386,12 +389,12 @@ const messageGroupConfig = [
             })
         }
     },
-    { // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
-        keywords: [],
+    {   // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
+        handle_type: 'default',
         callback: function (data, bot) {
             let userId = data.sender.user_id
 
-            // 如果开启聊天模式, 则不进入该条件
+            // 没有开启聊天模式
             if (map.get(userId) === undefined || map.get(userId) === 0) {
                 return new Promise((resolve, reject) => {
                     let replyMsg = ['(oωo)喵?', '干嘛?', '怎么了?', '在的', '嗯哼?', '@我干嘛?', '[CQ:face,id=307,text=/喵喵]', '2333~', '咕-咕-咕-',
@@ -409,6 +412,7 @@ const messageGroupConfig = [
                 })
             }
 
+            // 开启聊天模式
             return new Promise(resolve => {
                 let msgArray = data.message
                 for (let msg of msgArray) {
@@ -417,7 +421,9 @@ const messageGroupConfig = [
                             "content": msg.data.text,
                             "type": 2,
                             "from": data.sender.user_id,
-                            "fromName": data.sender.nickname,
+                            "fromName": data.sender.card,
+                            "to": data.group_id,
+                            "toName": data.group_name,
                         }
                         // console.log(playLoad)
                         mlyai.chat(playLoad).then(reply => {
