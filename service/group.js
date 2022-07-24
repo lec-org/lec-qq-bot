@@ -74,30 +74,31 @@ const messageGroupConfig = [
     },
     {
         keywords: ['列表', '菜单', '功能', '你能干啥'],
-        reply: [
-            {
-                type: "text",
-                data: {
-                    text:
-                        '@ 并回复以下关键字：\n' +
-                        '1. 乐程是什么\n' +
-                        '2. 在哪里\n' +
-                        '3. 丢骰子\n' +
-                        '4. 签到\n' +
-                        '5. 成都天气\n' +
-                        '6. 微博热搜\n' +
-                        '7. 力扣每日一题\n' +
-                        '8. 舔狗日记\n' +
-                        '9. 二次元\n' +
-                        '10. 力扣随机一题\n' +
-                        '11. 听首歌\n' +
-                        '12. 网易云热评\n' +
-                        '13. 高情商聊天: 开启后有更多功能. 发送 "开启聊天" 开始, 发送 "关闭聊天" 结束\n\n' +
-                        '即将支持更多功能'
-                },
-            },
-        ],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                let fucList = [
+                    '乐程是什么',
+                    '在哪里 | 位置',
+                    '丢骰子',
+                    '签到',
+                    '成都天气',
+                    '微博热搜',
+                    '力扣每日一题',
+                    '舔狗日记',
+                    '二次元',
+                    '力扣随机一题',
+                    '听首歌 | 网易云',
+                    '网易云热评',
+                    '高情商聊天: 开启后有更多功能. 发送 "开启聊天" 开始, 发送 "关闭聊天" 结束',
+                    '即将支持更多功能']
 
+                let prefix = '@ 并回复以下关键字：\n'
+
+                let msg = prefix + fucList.map((value, index) => `${index + 1}. ${value}`).join('\n')
+
+                resolve(msg)
+            })
+        }
     },
     {
         keywords: ['你是谁', 'who are you', "你是"],
@@ -105,9 +106,7 @@ const messageGroupConfig = [
             {
                 type: "text",
                 data: {
-                    text:
-                        '我是乐程机器人二号LEC v2.0 \n' +
-                        '由乐程软件工作室20级成员开发~'
+                    text: '我是乐程机器人二号LEC v2.0\n由乐程软件工作室20级成员开发~'
                 }
             }
         ]
@@ -237,40 +236,27 @@ const messageGroupConfig = [
         keywords: ['二次元'],
         callback: (data, bot) => {
             return new Promise(resolve => {
-
-                let prefix = './img/'
-                fs.exists(prefix, (res) => {
-                    if (!res) {
-                        fs.mkdir(prefix, (e) => {
-                        })
+                data.reply('二次元加载中·····')
+                axios.get('https://acg.toubiec.cn/random.php?ret=json').then(response => {
+                    let res = response.data[0];
+                    if (res.mes !== 'ok') {
+                        console.log('二次元接口错误')
+                        console.log(response.data)
+                        resolve('休息一下吧')
+                        return
                     }
-                })
-                let path = prefix + Date.now() + '_' + Math.floor((Math.random() * 10000)) + '.jpg'
-                let msg = {
-                    type: "image",
-                    data: {
-                        'file': path
+                    let msg = {
+                        type: "image",
+                        data: {
+                            'file': res.imgurl
+                        }
                     }
-                }
-                axios({
-                    method: 'get',
-                    url: 'https://api.oick.cn/random/api.php?type=pe',
-                    responseType: 'stream'
-                }).then((response) => {
-                    // 这里就先别保存了，节约空间
-                    // 不浪费, 将图片保存到本地./img中
-                    let stream = fs.createWriteStream(path)
-                    response.data.pipe(stream)
-
-                    // pipe是异步的, 需要用回调函数确认是否完成
-                    stream.on('close', () => {
-                        // console.log(msg)
-                        resolve(msg)
-                    })
+                    // console.log(msg)
+                    resolve(msg)
                 }).catch((e) => {
                     console.log('二次元接口出错了, 休息一下吧')
                     console.error(e)
-                    resolve('二次元接口出错了, 休息一下吧')
+                    resolve('休息一下吧')
                 })
 
             })
@@ -368,10 +354,13 @@ const messageGroupConfig = [
             return new Promise(resolve => {
                 let userId = data.sender.user_id
                 if (map.get(userId) === 1) {
-                    resolve("已经在聊天模式中了哦, \n支持:\n1. 签到 | 签到榜\n2. 猜拳xx(例如石头)\n3. 个人中心\n4. 一言\n5. 智能回复")
+                    resolve("已经在聊天模式中了哦")
                 } else {
                     map.set(userId, 1)
-                    resolve("开启聊天模式成功~, \n支持:\n1. 签到\n2. 猜拳xx(例如石头)\n3. 个人中心\n4. 一言\n5. 智能回复")
+                    let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心', '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
+                    let str = fucList.map((v, i) => `${i + 1}. ${v}`).join('\n')
+                    let prefix = '开启聊天模式成功~\n支持:\n'
+                    resolve(prefix + str)
                 }
             })
         }
