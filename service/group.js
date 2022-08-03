@@ -4,8 +4,21 @@ const request = require("request");
 const String = require('sprintf-js')
 const mlyai = require('./chat/mlyai2.js')
 const {segment} = require("oicq")
-const map = new Map()
+const {
+    isChatOpen,
+    setChatState,
+    isChatGlobalOpen,
+    isVoiceGlobalOpen,
+    isVoiceOpen,
+    setVoiceState,
+    setAdminMap
+} = require("./manage");
 
+function getYoudaoVoiceUrl(text) {
+    return 'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=' + text
+}
+
+const adminNumber = [1251958108, 2779066456, 1353736793]
 const messageGroupConfig = [
     {
         keywords: ['乐程是什么', '乐程是'],
@@ -75,6 +88,7 @@ const messageGroupConfig = [
                     '听首歌 | 网易云音乐',
                     '网易云热评',
                     '高情商聊天: 开启后有更多功能. 发送 "开启聊天" 开始, 发送 "关闭聊天" 结束',
+                    '语音模式: 部分回复将以语音的方式发送. 发送 "开启语音" 开始, 发送 "关闭语音" 结束',
                     '即将支持更多功能']
 
                 let prefix = '@ 并回复以下关键字：\n'
@@ -86,7 +100,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['你是谁', 'who are you', "你是"],
+        keywords: ['你是谁'],
         reply: [
             '我是乐程机器人二号LEC v2.0\n由乐程软件工作室20级成员开发~'
         ]
@@ -303,18 +317,22 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['开启聊天', '聊天'],
+        keywords: ['开启聊天'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心', '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
                 let fucListStr = fucList.map((v, i) => `${i + 1}. ${v}`).join('\n')
 
                 let userId = data.sender.user_id
-                if (map.get(userId) === 1) {
+                if (!isChatGlobalOpen()) {
+                    resolve('管理员未开启聊天模式')
+                    return
+                }
+                if (isChatOpen(userId)) {
                     let prefix = '已经在聊天模式中咯~\n支持:\n'
                     resolve(prefix + fucListStr)
                 } else {
-                    map.set(userId, 1)
+                    setChatState(userId, 'lc')
                     let prefix = '开启聊天模式成功~\n支持:\n'
                     resolve(prefix + fucListStr)
                 }
@@ -322,14 +340,14 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['关闭聊天', '关闭'],
+        keywords: ['关闭聊天'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
-                if (map.get(userId) === undefined || map.get(userId) === 0) {
+                if (!isChatOpen(userId)) {
                     resolve("已经关闭了哦")
                 } else {
-                    map.delete(userId)
+                    setChatState(userId)
                     resolve("关闭聊天模式成功~")
                 }
             })
@@ -339,7 +357,86 @@ const messageGroupConfig = [
         keywords: ['语音测试'],
         callback: (data, bot) => {
             return new Promise(resolve => {
-                resolve(segment.record('./resources/2.0.0.flac'))
+                let records = [
+                    './resources/2.0.0.flac',
+                    'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=你好啊',
+                    'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=欢迎加入乐程',
+                ]
+                resolve(segment.record(records.randomOne()))
+            })
+        }
+    }, {
+        keywords: ['开启语音'],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                if (!isVoiceGlobalOpen()) {
+                    resolve('管理员未开启语音模式')
+                    return
+                }
+                let userId = data.sender.user_id
+                if (isVoiceOpen(userId)) {
+                    resolve('已经在语音模式中了哦~')
+                } else {
+                    setChatState(userId, 'lc')
+                    setVoiceState(userId, 'lc')
+                    resolve('开启语音模式成功~')
+                }
+            })
+        }
+    },
+    {
+        keywords: ['关闭语音'],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                let userId = data.sender.user_id
+                if (!isVoiceOpen(userId)) {
+                    resolve("已经关闭了哦")
+                } else {
+                    setVoiceState(userId)
+                    resolve("关闭语音模式成功~")
+                }
+            })
+        }
+    },
+    {
+        keywords: ['admin'],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                let userId = data.sender.user_id
+                if (!adminNumber.includes(userId)) {
+                    resolve('没有权限哩!')
+                    return
+                }
+                let msg = ''
+                data.message.forEach(item => {
+                    if (item.type === 'text') {
+                        msg = item.data.text.replaceAll('  ', ' ').trim()
+                    }
+                })
+                const pattern = /^admin set [a-zA-z]+ \w+/
+                if (!pattern.test(msg)) {
+                    resolve('指令格式错误')
+                    return;
+                }
+                let args = msg.split(' ')
+                console.log(args)
+                if (args[2] === 'chat') {
+                    if (args[3] === undefined || args[3] === '0') {
+                        setAdminMap('chat')
+                    } else {
+                        setAdminMap('chat', 'lc')
+                    }
+                } else if (args[2] === 'voice') {
+                    if (args[3] === undefined || args[3] === '0') {
+                        setAdminMap('voice')
+                    } else {
+                        setAdminMap('voice', 'lc')
+                    }
+                } else {
+                    resolve('设置错误, 没有该该项')
+                    return
+                }
+                resolve('设置成功!')
             })
         }
     },
@@ -349,7 +446,7 @@ const messageGroupConfig = [
             let userId = data.sender.user_id
 
             // 没有开启聊天模式
-            if (map.get(userId) === undefined || map.get(userId) === 0) {
+            if (!isChatOpen(userId)) {
                 return new Promise((resolve, reject) => {
                     let replyMsg = ['(oωo)喵?', '干嘛?', '怎么了?', '在的', '嗯哼?', '@我干嘛?', '[CQ:face,id=307,text=/喵喵]', '2333~', '咕-咕-咕-',
                         '[CQ:image,file=812dea6ecfaa3b293ee1a3028209354741519-417-114.gif,url=https://c2cpicdw.qpic.cn/offpic_new/2779066456//2779066456-1883383011-812DEA6ECFAA3B293EE1A30282093547/0?term=2]',
@@ -377,7 +474,12 @@ const messageGroupConfig = [
                             let res = []
                             replies.forEach(item => {
                                 if (item.typed === 1) {
-                                    res.push(item.content)
+                                    if (isVoiceOpen(userId) && item.content.length < 30) {
+                                        let url = segment.record(getYoudaoVoiceUrl(item.content));
+                                        res.push(url)
+                                    } else {
+                                        res.push(item.content)
+                                    }
                                 } else if (item.typed === 2) {
                                     res.push(segment.image(mlyai.getAbsoluteUrl(item.content)))
                                 } else if (item.typed === 4) {
