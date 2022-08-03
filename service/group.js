@@ -1,21 +1,16 @@
 // 群发配置
 const axios = require("axios");
 const request = require("request");
-const fs = require("fs");
 const String = require('sprintf-js')
 const mlyai = require('./chat/mlyai2.js')
+const {segment} = require("oicq")
 const map = new Map()
 
 const messageGroupConfig = [
     {
         keywords: ['乐程是什么', '乐程是'],
         reply: [
-            {
-                type: 'image',
-                data: {
-                    file: 'c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg'
-                }
-            },
+            segment.image('c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg'),
             {
                 type: 'text',
                 data: {
@@ -37,37 +32,27 @@ const messageGroupConfig = [
                 lat: 30.827711,
                 lng: 104.186822,
             }
-        }
-        ]
+        }]
     },
     {
         keywords: ['丢骰子', '骰子', '色子'],
-        reply: [{
-            type: "dice",
-            data: {
-                id: () => 1 + (Math.floor(Math.random() * 10) % 6)
-            }
-        }
-        ]
+        reply: ['我丢~', segment.dice((Math.floor(Math.random() * 1010) % 6))]
     },
     {
         keywords: ['签到'],
         callback: (data) => {
             return new Promise((resolve, reject) => {
-                // let replyMsg = `${data.sender.nickname}, 签到成功!!!`
-                // resolve(replyMsg)
-                let playLoad = {
-                    "content": "签到",
-                    "type": 2,
-                    "from": data.sender.user_id,
-                    "fromName": data.sender.card,
-                    // 没有to, 好友和群会混淆
-                    "to": data.group_id,
-                    "toName": data.group_name,
-                }
+                let playLoad = mlyai.getPlayLoad(2, null, data, "签到")
                 // console.log(playLoad)
-                mlyai.chat(playLoad).then(reply => {
-                    resolve(reply)
+                mlyai.chat(playLoad).then(replies => {
+                    let res = []
+                    replies.forEach(item => {
+                        if (item.typed === 1) {
+                            res.push(item.content)
+                        }
+                    })
+                    // console.log(res)
+                    resolve(res)
                 })
             })
         }
@@ -103,12 +88,7 @@ const messageGroupConfig = [
     {
         keywords: ['你是谁', 'who are you', "你是"],
         reply: [
-            {
-                type: "text",
-                data: {
-                    text: '我是乐程机器人二号LEC v2.0\n由乐程软件工作室20级成员开发~'
-                }
-            }
+            '我是乐程机器人二号LEC v2.0\n由乐程软件工作室20级成员开发~'
         ]
     },
     {
@@ -116,29 +96,24 @@ const messageGroupConfig = [
         reply: [],
         callback: (data, bot) => {
             return new Promise(resolve => {
-                axios.get("http://aider.meizu.com/app/weather/listWeather?cityIds=101270101").then(res => {
-                    let s = []
-                    if (res.data.code !== '200') {
-                        console.warn(res.data)
-                        resolve("休息一下吧")
+                let msgList = data.message
+                for (let msg of msgList) {
+                    if (msg.type === 'text') {
+                        let playLoad = mlyai.getPlayLoad(2, msg, data);
+                        // console.log(playLoad)
+                        mlyai.chat(playLoad).then(replies => {
+                            let res = []
+                            replies.forEach(item => {
+                                if (item.typed === 1) {
+                                    res.push(item.content)
+                                }
+                            })
+                            // console.log(res)
+                            resolve(res)
+                        })
                         return
                     }
-
-                    let value = res.data.value[0]
-
-                    s.push(value.city + '气温  ' + value.realtime.temp + ' °C')
-                    value.indexes.forEach(e => {
-                        if (e.content !== '' && e.content !== undefined) {
-                            s.push(e.content)
-                        }
-                    })
-                    // console.log(s.join('\n\n'))
-                    resolve(s.join('\n\n'))
-                }).catch(e => {
-                    resolve('休息一下吧')
-                    console.error("天气接口调用出错了 {}".replace("{}", e.message))
-                })
-
+                }
             })
         }
     },
@@ -194,13 +169,7 @@ const messageGroupConfig = [
                     } else {
                         let json = JSON.parse(body);
                         let info = json.data.todayRecord[0]
-                        let replyMsg = [{
-                            type: "text",
-                            data: {
-                                text: `每日一题 ${info.date}\n名称: ${info.question.title}\n通过率: ${(info.question.acRate * 100).toFixed(2)}% \n难度: ${info.question.difficulty}\n链接: https://leetcode.cn/problems/${info.question.titleSlug}`
-                            }
-                        },
-                        ]
+                        let replyMsg = `每日一题 ${info.date}\n名称: ${info.question.title}\n通过率: ${(info.question.acRate * 100).toFixed(2)}% \n难度: ${info.question.difficulty}\n链接: https://leetcode.cn/problems/${info.question.titleSlug}`
                         // console.log(replyMsg)
                         resolve(replyMsg)
                     }
@@ -246,17 +215,11 @@ const messageGroupConfig = [
                         resolve('休息一下吧')
                         return
                     }
-                    let msg = {
-                        type: "image",
-                        data: {
-                            'file': res.imgurl
-                        }
-                    }
-                    // console.log(msg)
-                    resolve(msg)
+                    // console.log(response.data)
+                    resolve(segment.image(res.imgurl))
                 }).catch((e) => {
-                    console.log('二次元接口出错了, 休息一下吧')
-                    console.error(e)
+                    console.error('二次元接口出错了, 休息一下吧')
+                    console.error(e.message)
                     resolve('休息一下吧')
                 })
 
@@ -307,19 +270,11 @@ const messageGroupConfig = [
                             resolve("休息一下吧")
                             return
                         }
-                        let music = {
-                            type: "music",
-                            data: {
-                                type: '163',
-                                id: res.data.data.url.split('=')[1],
-                            }
-                        }
-                        // console.log(music)
-                        resolve(music)
+                        resolve(segment.music('163', res.data.data.url.split('=')[1]))
                     }
                 ).catch(e => {
-                    console.log('网易云接口调用出错了')
-                    console.error(e)
+                    console.error('网易云接口调用出错了')
+                    console.error(e.message)
                     resolve('休息一下吧')
                 })
             })
@@ -405,20 +360,24 @@ const messageGroupConfig = [
 
             // 开启聊天模式
             return new Promise(resolve => {
-                let msgArray = data.message
-                for (let msg of msgArray) {
+                let msgList = data.message
+                for (let msg of msgList) {
                     if (msg.type === 'text') {
-                        let playLoad = {
-                            "content": msg.data.text,
-                            "type": 2,
-                            "from": data.sender.user_id,
-                            "fromName": data.sender.card,
-                            "to": data.group_id,
-                            "toName": data.group_name,
-                        }
+                        let playLoad = mlyai.getPlayLoad(2, msg, data);
                         // console.log(playLoad)
-                        mlyai.chat(playLoad).then(reply => {
-                            resolve(reply)
+                        mlyai.chat(playLoad).then(replies => {
+                            let res = []
+                            replies.forEach(item => {
+                                if (item.typed === 1) {
+                                    res.push(item.content)
+                                } else if (item.typed === 2) {
+                                    res.push(segment.image(mlyai.getAbsoluteUrl(item.content)))
+                                } else if (item.typed === 4) {
+                                    res.push(segment.record(mlyai.getAbsoluteUrl(item.content)))
+                                }
+                            })
+                            // console.log(res)
+                            resolve(res)
                         })
                         return
                     }
