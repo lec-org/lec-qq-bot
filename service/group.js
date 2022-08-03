@@ -81,7 +81,7 @@ const messageGroupConfig = [
                     '在哪里 | 位置',
                     '丢骰子',
                     '签到',
-                    '成都天气',
+                    '天气 (例如: 成都天气)',
                     '微博热搜',
                     '力扣每日一题',
                     '舔狗日记',
@@ -95,7 +95,7 @@ const messageGroupConfig = [
                 let prefix = '@ 并回复以下关键字：\n'
 
                 let msg = prefix + fucList.map((value, index) => `${index + 1}. ${value}`).join('\n')
-
+                // console.log(msg)
                 resolve(msg)
             })
         }
@@ -163,8 +163,9 @@ const messageGroupConfig = [
                     resolve(s.join('\n\n'))
 
                 }).catch(e => {
-                    // console.log(e)
-                    resolve("微博热搜接口调用出错了 {}".replace("{}", e.message))
+                    console.error("微博热搜接口出错了")
+                    console.error(e.message)
+                    resolve("微博热搜接口调用出错了")
                 })
 
             })
@@ -224,8 +225,8 @@ const messageGroupConfig = [
                     resolve(res.data.data.content)
 
                 }).catch(e => {
-                    console.log('舔狗日记接口调用出错了')
-                    console.error(e)
+                    console.error('舔狗日记接口调用出错了')
+                    console.error(e.message)
                     resolve('休息一下吧')
                 })
 
@@ -277,21 +278,19 @@ const messageGroupConfig = [
                         'Content-Type': 'application/json'
                     }
                 }).then(res => {
-
-                    // console.log(res.data)
                     try {
                         let problemName = res.data.data.problemsetRandomFilteredQuestion;
                         let msg = 'https://leetcode.cn/problems/' + problemName
+                        // console.log(msg)
                         resolve("随机一题\n链接: " + msg)
                     } catch (e) {
                         console.log('LeetCode接口调用错误')
                         console.error(e);
                         resolve('休息一下吧')
                     }
-
                 }).catch(e => {
-                    console.log('LeetCode接口调用错误')
-                    console.error(e);
+                    console.error('LeetCode接口调用错误')
+                    console.error(e.message);
                     resolve("休息一下吧")
                 })
             })
@@ -332,7 +331,7 @@ const messageGroupConfig = [
             return new Promise(resolve => {
                 axios.get('https://v2.alapi.cn/api/comment?token=aCPgupefjrIOitsa').then(res => {
                         if (res.data.code !== 200) {
-                            console.warn('网易云热评接口调用出错')
+                            console.log('网易云热评接口调用出错')
                             console.log(res.data)
                             resolve("休息一下吧")
                             return
@@ -341,8 +340,8 @@ const messageGroupConfig = [
                         resolve(msg)
                     }
                 ).catch(e => {
-                    console.log('网易云热评接口调用出错了')
-                    console.error(e)
+                    console.error('网易云热评接口调用出错了')
+                    console.error(e.message)
                     resolve('休息一下吧')
                 })
             })
@@ -352,15 +351,17 @@ const messageGroupConfig = [
         keywords: ['开启聊天', '聊天'],
         callback: (data, bot) => {
             return new Promise(resolve => {
+                let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心', '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
+                let fucListStr = fucList.map((v, i) => `${i + 1}. ${v}`).join('\n')
+
                 let userId = data.sender.user_id
                 if (map.get(userId) === 1) {
-                    resolve("已经在聊天模式中了哦")
+                    let prefix = '已经在聊天模式中咯~\n支持:\n'
+                    resolve(prefix + fucListStr)
                 } else {
                     map.set(userId, 1)
-                    let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心', '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
-                    let str = fucList.map((v, i) => `${i + 1}. ${v}`).join('\n')
                     let prefix = '开启聊天模式成功~\n支持:\n'
-                    resolve(prefix + str)
+                    resolve(prefix + fucListStr)
                 }
             })
         }
