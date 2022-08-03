@@ -23,7 +23,7 @@ const messageGroupConfig = [
                         '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
                         '团队有众多成员进入百度阿里腾讯字节等一线互联网公司就业，\n' +
                         '更有保研至川大、电子科大等学校进一步深造!\n' +
-                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!' 
+                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
                 }
             }
         ]
@@ -87,7 +87,7 @@ const messageGroupConfig = [
                     '舔狗日记',
                     '二次元',
                     '力扣随机一题',
-                    '听首歌 | 网易云',
+                    '听首歌 | 网易云音乐',
                     '网易云热评',
                     '高情商聊天: 开启后有更多功能. 发送 "开启聊天" 开始, 发送 "关闭聊天" 结束',
                     '即将支持更多功能']
@@ -298,7 +298,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['歌', '网易云', '网抑云'],
+        keywords: ['歌', '网易云音乐', '网抑云'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 axios.get(encodeURI("https://api.uomg.com/api/rand.music?sort=热歌榜&format=json")).then(res => {
