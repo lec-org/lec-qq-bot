@@ -207,9 +207,9 @@ const messageGroupConfig = [
         callback: (data, bot) => {
             return new Promise(resolve => {
                 data.reply('二次元加载中·····')
-                axios.get('https://acg.toubiec.cn/random.php?ret=json').then(response => {
-                    let res = response.data[0];
-                    if (res.mes !== 'ok') {
+                axios.get('https://api.vvhan.com/api/acgimg?type=json').then(response => {
+                    let res = response.data;
+                    if (res.success !== true) {
                         console.log('二次元接口错误')
                         console.log(response.data)
                         resolve('休息一下吧')
@@ -220,7 +220,7 @@ const messageGroupConfig = [
                 }).catch((e) => {
                     console.error('二次元接口出错了, 休息一下吧')
                     console.error(e.message)
-                    resolve('休息一下吧')
+                    resolve('休息一下吧, 二次元加载不出来了!')
                 })
 
             })
