@@ -335,6 +335,14 @@ const messageGroupConfig = [
             })
         }
     },
+    {
+        keywords: ['语音测试'],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                resolve(segment.record('./resources/2.0.0.flac'))
+            })
+        }
+    },
     {   // 这个一定要放在最后面，之前所有关键字均为命中则进入本项
         handle_type: 'default',
         callback: function (data, bot) {
