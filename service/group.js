@@ -12,7 +12,7 @@ const {
     isVoiceOpen,
     setVoiceState,
     setAdminMap
-} = require("./manage");
+} = require("./store");
 
 function getYoudaoVoiceUrl(text) {
     return 'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=' + text
