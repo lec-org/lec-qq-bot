@@ -1,39 +1,21 @@
 // 群发配置
 const axios = require("axios");
 const request = require("request");
-const String = require('sprintf-js')
-const mlyai = require('./chat/mlyai2.js')
+const mlyai = require('./chat/mlyai.js')
 const {segment} = require("oicq")
-const {
-    isChatOpen,
-    setChatState,
-    isChatGlobalOpen,
-    isVoiceGlobalOpen,
-    isVoiceOpen,
-    setVoiceState,
-    setAdminMap
-} = require("./store");
+const Auth = require("./auth");
+const Utils = require("./utils");
 
-function getYoudaoVoiceUrl(text) {
-    return 'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=' + text
-}
 
-const adminNumber = [1251958108, 2779066456, 1353736793]
 const messageGroupConfig = [
     {
         keywords: ['乐程是什么', '乐程是'],
         reply: [
             segment.image('c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg'),
-            {
-                type: 'text',
-                data: {
-                    text:
-                        '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
-                        '团队有众多成员进入百度阿里腾讯字节等一线互联网公司就业，\n' +
-                        '更有保研至川大、电子科大等学校进一步深造!\n' +
-                        '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
-                }
-            }
+            '欢迎加入乐程软件工作室!我们是一个软件工程类团队!\n' +
+            '团队有众多成员进入百度阿里腾讯字节等一线互联网公司就业，\n' +
+            '更有保研至川大、电子科大等学校进一步深造!\n' +
+            '加入我们,和优秀的人一起,用最初的初心做最长久的事!'
         ]
     },
     {
@@ -129,7 +111,6 @@ const messageGroupConfig = [
         keywords: ['微博热搜', '热搜', '微博'],
         reply: [],
         callback: (data, bot) => {
-
             return new Promise(resolve => {
 
                 axios.get("https://v2.alapi.cn/api/new/wbtop?num=15&token=aCPgupefjrIOitsa").then(res => {
@@ -188,11 +169,9 @@ const messageGroupConfig = [
     {
         keywords: ['舔狗日记'],
         callback: (data, bot) => {
-
             return new Promise(resolve => {
 
                 axios.get("https://v2.alapi.cn/api/dog?token=aCPgupefjrIOitsa&format=json").then(res => {
-                    let s = []
                     if (res.data.code !== 200) {
                         console.warn('舔狗日记接口 ' + res.data.msg)
                         resolve("休息一下吧")
@@ -200,7 +179,6 @@ const messageGroupConfig = [
                     }
                     // console.log(res.data.data.content)
                     resolve(res.data.data.content)
-
                 }).catch(e => {
                     console.error('舔狗日记接口调用出错了')
                     console.error(e.message)
@@ -235,7 +213,7 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['随机一题', '来道题'],
+        keywords: ['随机一题', '来道题', '力扣一题', '力扣题'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let para = {
@@ -299,7 +277,8 @@ const messageGroupConfig = [
                             resolve("休息一下吧")
                             return
                         }
-                        let msg = String.sprintf("%s\n\n——网易云音乐热评《%s》", res.data.data.comment_content, res.data.data.title)
+                        let msg = `${res.data.data.comment_content}\n\n
+                                        —— 网易云音乐热评《${res.data.data.title}》`
                         resolve(msg)
                     }
                 ).catch(e => {
@@ -314,19 +293,20 @@ const messageGroupConfig = [
         keywords: ['开启聊天'],
         callback: (data, bot) => {
             return new Promise(resolve => {
-                let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心', '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
+                let fucList = ['签到', '签到榜', '猜拳, "例如猜拳石头"', '个人中心',
+                    '一言', '成语接龙', '倒计时, 例如"高考倒计时"', '智能回复']
                 let fucListStr = fucList.map((v, i) => `${i + 1}. ${v}`).join('\n')
 
                 let userId = data.sender.user_id
-                if (!isChatGlobalOpen()) {
+                if (!Auth.isGlobalChatOpen()) {
                     resolve('管理员未开启聊天模式')
                     return
                 }
-                if (isChatOpen(userId)) {
+                if (Auth.isUserChatOpen(userId)) {
                     let prefix = '已经在聊天模式中咯~\n支持:\n'
                     resolve(prefix + fucListStr)
                 } else {
-                    setChatState(userId, 'lc')
+                    Auth.setUserChatState(userId, 'lc')
                     let prefix = '开启聊天模式成功~\n支持:\n'
                     resolve(prefix + fucListStr)
                 }
@@ -338,10 +318,10 @@ const messageGroupConfig = [
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
-                if (!isChatOpen(userId)) {
+                if (!Auth.isGlobalChatOpen(userId)) {
                     resolve("已经关闭了哦")
                 } else {
-                    setChatState(userId)
+                    Auth.setUserChatState(userId)
                     resolve("关闭聊天模式成功~")
                 }
             })
@@ -355,6 +335,7 @@ const messageGroupConfig = [
                     './resources/2.0.0.flac',
                     'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=你好啊',
                     'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=欢迎加入乐程',
+                    'https://tts.youdao.com/fanyivoice?le=zh&keyfrom=speaker-target&word=好好学习, 天天向上',
                 ]
                 resolve(segment.record(records.randomOne()))
             })
@@ -363,16 +344,16 @@ const messageGroupConfig = [
         keywords: ['开启语音'],
         callback: (data, bot) => {
             return new Promise(resolve => {
-                if (!isVoiceGlobalOpen()) {
+                if (!Auth.isGlobalVoiceOpen()) {
                     resolve('管理员未开启语音模式')
                     return
                 }
                 let userId = data.sender.user_id
-                if (isVoiceOpen(userId)) {
+                if (Auth.isUserVoiceOpen(userId)) {
                     resolve('已经在语音模式中了哦~')
                 } else {
-                    setChatState(userId, 'lc')
-                    setVoiceState(userId, 'lc')
+                    Auth.setUserChatState(userId, 'lc')
+                    Auth.setUserVoiceState(userId, 'lc')
                     resolve('开启语音模式成功~')
                 }
             })
@@ -383,10 +364,10 @@ const messageGroupConfig = [
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
-                if (!isVoiceOpen(userId)) {
+                if (!Auth.isUserVoiceOpen(userId)) {
                     resolve("已经关闭了哦")
                 } else {
-                    setVoiceState(userId)
+                    Auth.setUserVoiceState(userId)
                     resolve("关闭语音模式成功~")
                 }
             })
@@ -419,44 +400,31 @@ const messageGroupConfig = [
         }
     },
     {
-        keywords: ['admin'],
+        keywords: ['set'],
         callback: (data, bot) => {
             return new Promise(resolve => {
                 let userId = data.sender.user_id
-                if (!adminNumber.includes(userId)) {
+                if (!Auth.isAdmin(userId)) {
                     resolve('没有权限哩!')
                     return
                 }
-                let msg = ''
-                data.message.forEach(item => {
-                    if (item.type === 'text') {
-                        msg = item.data.text.replaceAll('  ', ' ').trim()
-                    }
-                })
-                const pattern = /^admin set [a-zA-z]+ \w+/
+                let msg = Utils.getMsgItemByType(data.message, 'text')
+                    .data.text.replaceAll('  ', ' ').trim()
+
+                // match
+                const pattern = /^set [a-zA-z]+ \d+/
                 if (!pattern.test(msg)) {
                     resolve('指令格式错误')
                     return;
                 }
                 let args = msg.split(' ')
-                console.log(args)
-                if (args[2] === 'chat') {
-                    if (args[3] === undefined || args[3] === '0') {
-                        setAdminMap('chat')
-                    } else {
-                        setAdminMap('chat', 'lc')
-                    }
-                } else if (args[2] === 'voice') {
-                    if (args[3] === undefined || args[3] === '0') {
-                        setAdminMap('voice')
-                    } else {
-                        setAdminMap('voice', 'lc')
-                    }
-                } else {
-                    resolve('设置错误, 没有该该项')
+                if (!['chat', 'voice'].includes(args[1])) {
+                    resolve('设置错误, 没有该项')
                     return
+                } else {
+                    Auth.setGlobalState(args[1], args[2])
                 }
-                resolve('设置成功!')
+                resolve(`设置${args[1]}成功!`)
             })
         }
     },
@@ -466,7 +434,7 @@ const messageGroupConfig = [
             let userId = data.sender.user_id
 
             // 没有开启聊天模式
-            if (!isChatOpen(userId)) {
+            if (!Auth.isUserChatOpen(userId)) {
                 return new Promise((resolve, reject) => {
                     let replyMsg = ['(oωo)喵?', '干嘛?', '怎么了?', '在的', '嗯哼?', '@我干嘛?', '[CQ:face,id=307,text=/喵喵]', '2333~', '咕-咕-咕-',
                         '[CQ:image,file=812dea6ecfaa3b293ee1a3028209354741519-417-114.gif,url=https://c2cpicdw.qpic.cn/offpic_new/2779066456//2779066456-1883383011-812DEA6ECFAA3B293EE1A30282093547/0?term=2]',
@@ -491,23 +459,7 @@ const messageGroupConfig = [
                         let playLoad = mlyai.getPlayLoad(2, msg, data);
                         // console.log(playLoad)
                         mlyai.chat(playLoad).then(replies => {
-                            let res = []
-                            replies.forEach(item => {
-                                if (item.typed === 1) {
-                                    if (isVoiceOpen(userId) && item.content.length < 30) {
-                                        let url = segment.record(getYoudaoVoiceUrl(item.content));
-                                        res.push(url)
-                                    } else {
-                                        res.push(item.content)
-                                    }
-                                } else if (item.typed === 2) {
-                                    res.push(segment.image(mlyai.getAbsoluteUrl(item.content)))
-                                } else if (item.typed === 4) {
-                                    res.push(segment.record(mlyai.getAbsoluteUrl(item.content)))
-                                }
-                            })
-                            // console.log(res)
-                            resolve(res)
+                            resolve(Utils.convertToElems(replies, Auth.isUserVoiceOpen(userId)))
                         })
                         return
                     }

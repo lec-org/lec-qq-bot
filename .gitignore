@@ -7,4 +7,3 @@ Dockerfile
 docker-compose.yaml
 img/
 service/chat/config.js
-service/chat/mlyai.js
