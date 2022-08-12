@@ -393,6 +393,32 @@ const messageGroupConfig = [
         }
     },
     {
+        keywords: ['历史上今天', '历史上的今天', '历史今天', '历史的今天'],
+        callback: (data, bot) => {
+            return new Promise(resolve => {
+                axios.get('https://api.asilu.com/today').then(res => {
+                    if (res.data.code !== 200) {
+                        console.error(`历史上的今天接口出错了 | ${res.data}`)
+                        resolve('休息一下吧')
+                        return
+                    }
+                    let msgList = [`${new Date().toLocaleDateString()}`]
+                    res.data.data.forEach(e => {
+                        if (e.year >= 0) {
+                            msgList.push(`${e.year}年: ${e.title}`)
+                        } else {
+                            msgList.push(`公元前${Math.abs(e.year)}年: ${e.title}`)
+                        }
+                    })
+                    resolve(msgList.join('\n\n'))
+                }).catch(e => {
+                    console.error(`历史上的今天接口出错了 | ${e.message}`)
+                    resolve('休息一下吧')
+                })
+            })
+        }
+    },
+    {
         keywords: ['admin'],
         callback: (data, bot) => {
             return new Promise(resolve => {
