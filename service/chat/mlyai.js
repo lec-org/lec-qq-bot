@@ -46,11 +46,12 @@ function getAbsoluteUrl(url) {
 }
 
 function getPlayLoad(type, msg, data, content) {
+    let isNumber = Number.isInteger(data.sender.card)
     return {
         "content": content !== undefined ? content : msg.data.text,
         "type": type == null ? 2 : type,
         "from": data.sender.user_id,
-        "fromName": data.sender.card,
+        "fromName": isNumber ? data.sender.nickname : data.sender.card,
         "to": data.group_id,
         "toName": data.group_name,
     }
