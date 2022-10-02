@@ -440,7 +440,7 @@ const messageGroupConfig = [
                         '[CQ:image,file=812dea6ecfaa3b293ee1a3028209354741519-417-114.gif,url=https://c2cpicdw.qpic.cn/offpic_new/2779066456//2779066456-1883383011-812DEA6ECFAA3B293EE1A30282093547/0?term=2]',
                         '[CQ:image,file=53f96a7a6539652caf0486c065b5069c280114-240-240.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2353126009-53F96A7A6539652CAF0486C065B5069C/0?term=2]',
                         '有时候和我聊天的人太多了,我只能选择回复一部分', '虽然还不知道你想要说什么,但我还是得提醒一下有个东西叫百度', '嗨嗨害', '哪里又需要我了？', '怎么,是打算V我50了吗？',
-                        '有时候,有的话题我建议找我私聊比较好', '(。w。)', '如果有什么建议，可以反馈给乐程的开发者们', '[CQ:image,file=bf6d885be9997e67e783c71e9af9c9e99796-240-240.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2355345593-BF6D885BE9997E67E783C71E9AF9C9E9/0?term=2]',
+                        '有时候,有的话题我建议找我私聊比较好', '(。w。)', '如果有什么建议，可以反馈给乐程的开发者们',
                         '[CQ:image,file=67ad61b9c39ee80d2ce868144ddad15f86909-1080-1080.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2401112147-67AD61B9C39EE80D2CE868144DDAD15F/0?term=2]',
                         '[CQ:image,file=c78d9d5c7582d8784d0eef74ae1c8b9619967-240-240.jpg,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-2607997725-C78D9D5C7582D8784D0EEF74AE1C8B96/0?term=2]',
                         '[CQ:image,file=4963658e6bad33e4feee8c2bd7296fa2499244-240-148.gif,url=https://gchat.qpic.cn/gchatpic_new/2779066456/742958634-3029959254-4963658E6BAD33E4FEEE8C2BD7296FA2/0?term=2]',
